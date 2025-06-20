@@ -35,12 +35,8 @@ app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER', app.config[
 # Initialize Flask-Mail
 mail = Mail(app)
 
-# (Shortened for clarity — use full route logic from your original)
-
 @app.route('/')
 def index():
-    return "Task System is Running ✅"
-
-# Add any additional routes or APIs as needed...
-
-# Don't use app.run() here — Gunicorn will handle it
+    if 'user_id' in session:
+        return redirect(url_for('dashboard'))
+    return redirect(url_for('login'))
