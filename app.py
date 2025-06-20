@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_mail import Mail, Message
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -37,6 +36,10 @@ mail = Mail(app)
 
 @app.route('/')
 def index():
-    if 'user_id' in session:
-        return redirect(url_for('dashboard'))
     return redirect(url_for('login'))
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    return "Login Page Placeholder"
+
+# Don't use app.run() here — Gunicorn will handle it
