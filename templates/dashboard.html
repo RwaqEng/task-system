@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}لوحة التحكم - نظام إدارة المهام - شركة رِواق{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2 class="mb-4" style="color: #b78b1e;">مرحباً، {{ session.user_name }}</h2>
+        <p style="color: #121617;">{{ session.user_position }} - {{ session.user_department }}</p>
+        <p class="text-muted">إليك نظرة عامة على أنشطتك اليوم</p>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                    <i class="fas fa-calendar-check fa-2x" style="color: #b78b1e;"></i>
+                </div>
+                <h3 class="mb-2" style="color: #b78b1e;">{{ upcoming_meetings }}</h3>
+                <p class="text-muted mb-0">الاجتماعات هذا الأسبوع</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                    <i class="fas fa-exclamation-triangle fa-2x text-warning"></i>
+                </div>
+                <h3 class="mb-2 text-warning">{{ total_tasks - completed_tasks - in_progress_tasks }}</h3>
+                <p class="text-muted mb-0">المهام المتأخرة</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                    <i class="fas fa-check-circle fa-2x text-success"></i>
+                </div>
+                <h3 class="mb-2 text-success">{{ completed_tasks }}</h3>
+                <p class="text-muted mb-0">المهام المكتملة</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3 mb-3">
+        <div class="card border-0 shadow-sm h-100">
+            <div class="card-body text-center">
+                <div class="d-flex align-items-center justify-content-center mb-3">
+                    <i class="fas fa-tasks fa-2x" style="color: #b78b1e;"></i>
+                </div>
+                <h3 class="mb-2" style="color: #b78b1e;">{{ total_tasks }}</h3>
+                <p class="text-muted mb-0">إجمالي المهام</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Recent Tasks -->
+    <div class="col-md-8 mb-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header" style="background-color: #f8f9fa; border-bottom: 2px solid #b78b1e;">
+                <h5 class="mb-0" style="color: #b78b1e;">
+                    <i class="fas fa-tasks"></i> المهام الحديثة
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if recent_tasks %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th style="color: #121617;">المهمة</th>
+                                    <th style="color: #121617;">المكلف</th>
+                                    <th style="color: #121617;">الحالة</th>
+                                    <th style="color: #121617;">الأولوية</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for task in recent_tasks %}
+                                <tr>
+                                    <td style="color: #121617;">{{ task[1] }}</td>
+                                    <td style="color: #121617;">{{ task[12] or 'غير محدد' }}</td>
+                                    <td>
+                                        {% if task[6] == 'مكتملة' %}
+                                            <span class="badge bg-success">{{ task[6] }}</span>
+                                        {% elif task[6] == 'قيد التنفيذ' %}
+                                            <span class="badge bg-warning">{{ task[6] }}</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ task[6] }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if task[5] == 'عالية' %}
+                                            <span class="badge bg-danger">{{ task[5] }}</span>
+                                        {% elif task[5] == 'متوسطة' %}
+                                            <span class="badge bg-warning">{{ task[5] }}</span>
+                                        {% else %}
+                                            <span class="badge bg-info">{{ task[5] }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted text-center">لا توجد مهام حديثة</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Upcoming Meetings -->
+    <div class="col-md-4 mb-4">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header" style="background-color: #f8f9fa; border-bottom: 2px solid #b78b1e;">
+                <h5 class="mb-0" style="color: #b78b1e;">
+                    <i class="fas fa-calendar-alt"></i> الاجتماعات القادمة
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if upcoming_meetings_list %}
+                    {% for meeting in upcoming_meetings_list %}
+                    <div class="d-flex align-items-center mb-3 p-3 border rounded">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-1" style="color: #121617;">{{ meeting[1] }}</h6>
+                            <small class="text-muted">{{ meeting[3] }}</small>
+                            <br>
+                            <small class="text-muted">المنظم: {{ meeting[12] }}</small>
+                        </div>
+                        <div class="text-end">
+                            <i class="fas fa-calendar text-primary"></i>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted text-center">لا توجد اجتماعات قادمة</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,258 @@
+{% extends "base.html" %}
+
+{% block title %}إدارة المهام - نظام إدارة المهام - شركة رِواق{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 style="color: #b78b1e;">إدارة المهام</h2>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTaskModal">
+        <i class="fas fa-plus"></i> إضافة مهمة جديدة
+    </button>
+</div>
+
+<!-- Search and Filter -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="search-container">
+            <input type="text" class="form-control advanced-search" data-target="tasksTable" placeholder="البحث في المهام...">
+            <i class="fas fa-search search-icon"></i>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <select class="form-select" id="statusFilter">
+            <option value="">جميع الحالات</option>
+            <option value="جديدة">جديدة</option>
+            <option value="قيد التنفيذ">قيد التنفيذ</option>
+            <option value="مكتملة">مكتملة</option>
+            <option value="معلقة">معلقة</option>
+        </select>
+    </div>
+    <div class="col-md-3">
+        <select class="form-select" id="priorityFilter">
+            <option value="">جميع الأولويات</option>
+            <option value="عالية">عالية</option>
+            <option value="متوسطة">متوسطة</option>
+            <option value="منخفضة">منخفضة</option>
+        </select>
+    </div>
+</div>
+
+<!-- Tasks Table -->
+<div class="card border-0 shadow-sm">
+    <div class="card-header" style="background-color: #f8f9fa; border-bottom: 2px solid #b78b1e;">
+        <h5 class="mb-0" style="color: #b78b1e;">
+            <i class="fas fa-tasks"></i> قائمة المهام
+        </h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive-custom">
+            <table class="table table-hover" id="tasksTable">
+                <thead>
+                    <tr>
+                        <th style="color: white; background-color: #b78b1e;">المهمة</th>
+                        <th style="color: white; background-color: #b78b1e;">المكلف</th>
+                        <th style="color: white; background-color: #b78b1e;">الحالة</th>
+                        <th style="color: white; background-color: #b78b1e;">الأولوية</th>
+                        <th style="color: white; background-color: #b78b1e;">التقدم</th>
+                        <th style="color: white; background-color: #b78b1e;">الموعد النهائي</th>
+                        <th style="color: white; background-color: #b78b1e;">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                    <tr class="{% if task[5] == 'عالية' %}priority-high{% elif task[5] == 'متوسطة' %}priority-medium{% else %}priority-low{% endif %}">
+                        <td>
+                            <strong style="color: #121617;">{{ task[1] }}</strong>
+                            <br>
+                            <small class="text-muted">{{ task[2][:50] }}{% if task[2]|length > 50 %}...{% endif %}</small>
+                        </td>
+                        <td style="color: #121617;">{{ task[12] or 'غير محدد' }}</td>
+                        <td>
+                            <span class="status-indicator status-{{ task[6].replace(' ', '-').lower() }}"></span>
+                            {% if task[6] == 'مكتملة' %}
+                                <span class="badge bg-success">{{ task[6] }}</span>
+                            {% elif task[6] == 'قيد التنفيذ' %}
+                                <span class="badge bg-warning">{{ task[6] }}</span>
+                            {% elif task[6] == 'معلقة' %}
+                                <span class="badge bg-danger">{{ task[6] }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ task[6] }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if task[5] == 'عالية' %}
+                                <span class="badge bg-danger">{{ task[5] }}</span>
+                            {% elif task[5] == 'متوسطة' %}
+                                <span class="badge bg-warning">{{ task[5] }}</span>
+                            {% else %}
+                                <span class="badge bg-info">{{ task[5] }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar" role="progressbar" style="width: {{ task[7] }}%; background-color: #b78b1e;" aria-valuenow="{{ task[7] }}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <small class="text-muted">{{ task[7] }}%</small>
+                        </td>
+                        <td style="color: #121617;">
+                            {% if task[8] %}
+                                {{ task[8] }}
+                            {% else %}
+                                <span class="text-muted">غير محدد</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <button class="btn btn-sm btn-outline-primary" onclick="editTask({{ task[0] }})" data-bs-toggle="tooltip" title="تعديل">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteTask({{ task[0] }})" data-bs-toggle="tooltip" title="حذف">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add Task Modal -->
+<div class="modal fade" id="addTaskModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" style="color: #b78b1e;">إضافة مهمة جديدة</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="addTaskForm">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">عنوان المهمة</label>
+                            <input type="text" class="form-control" name="title" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">المكلف</label>
+                            <select class="form-select" name="assigned_to">
+                                <option value="">اختر المكلف</option>
+                                {% for user in users %}
+                                <option value="{{ user[0] }}">{{ user[1] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">الوصف</label>
+                        <textarea class="form-control" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">الأولوية</label>
+                            <select class="form-select" name="priority">
+                                <option value="متوسطة">متوسطة</option>
+                                <option value="عالية">عالية</option>
+                                <option value="منخفضة">منخفضة</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">الحالة</label>
+                            <select class="form-select" name="status">
+                                <option value="جديدة">جديدة</option>
+                                <option value="قيد التنفيذ">قيد التنفيذ</option>
+                                <option value="مكتملة">مكتملة</option>
+                                <option value="معلقة">معلقة</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">الموعد النهائي</label>
+                            <input type="date" class="form-control" name="due_date">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                    <button type="submit" class="btn btn-primary">حفظ المهمة</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Task management functions
+document.getElementById('addTaskForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData);
+    
+    fetch('/api/tasks', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('حدث خطأ: ' + data.message);
+        }
+    });
+});
+
+function editTask(taskId) {
+    // Implementation for editing tasks
+    console.log('Edit task:', taskId);
+}
+
+function deleteTask(taskId) {
+    if (confirm('هل أنت متأكد من حذف هذه المهمة؟')) {
+        fetch(`/api/tasks/${taskId}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('حدث خطأ: ' + data.message);
+            }
+        });
+    }
+}
+
+// Filter functionality
+document.getElementById('statusFilter').addEventListener('change', function() {
+    filterTasks();
+});
+
+document.getElementById('priorityFilter').addEventListener('change', function() {
+    filterTasks();
+});
+
+function filterTasks() {
+    const statusFilter = document.getElementById('statusFilter').value;
+    const priorityFilter = document.getElementById('priorityFilter').value;
+    const rows = document.querySelectorAll('#tasksTable tbody tr');
+    
+    rows.forEach(row => {
+        const status = row.querySelector('.badge').textContent.trim();
+        const priority = row.querySelectorAll('.badge')[1].textContent.trim();
+        
+        const statusMatch = !statusFilter || status === statusFilter;
+        const priorityMatch = !priorityFilter || priority === priorityFilter;
+        
+        row.style.display = statusMatch && priorityMatch ? '' : 'none';
+    });
+}
+</script>
+{% endblock %}
+

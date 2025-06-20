@@ -1,0 +1,235 @@
+/* Rivaq System Custom Styles */
+
+:root {
+    --rivaq-primary: #b78b1e;
+    --rivaq-secondary: #121617;
+    --rivaq-background: #FFFAFA;
+    --rivaq-light: #f8f9fa;
+}
+
+body {
+    background-color: var(--rivaq-background) !important;
+    color: var(--rivaq-secondary);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Navigation Styles */
+.navbar {
+    background-color: var(--rivaq-light) !important;
+    border-bottom: 2px solid var(--rivaq-primary);
+}
+
+.navbar-brand {
+    color: var(--rivaq-primary) !important;
+    font-weight: bold;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    background-color: var(--rivaq-light);
+    min-height: calc(100vh - 76px);
+    border-left: 2px solid var(--rivaq-primary);
+}
+
+.nav-link {
+    color: var(--rivaq-secondary) !important;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: #e9ecef;
+    color: var(--rivaq-primary) !important;
+}
+
+.nav-link.active {
+    background-color: var(--rivaq-primary) !important;
+    color: white !important;
+}
+
+/* Button Styles */
+.btn-primary {
+    background-color: var(--rivaq-primary);
+    border-color: var(--rivaq-primary);
+}
+
+.btn-primary:hover {
+    background-color: #9a7419;
+    border-color: #9a7419;
+}
+
+.btn-outline-primary {
+    color: var(--rivaq-primary);
+    border-color: var(--rivaq-primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--rivaq-primary);
+    border-color: var(--rivaq-primary);
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: var(--rivaq-light);
+    border-bottom: 2px solid var(--rivaq-primary);
+    border-radius: 15px 15px 0 0 !important;
+}
+
+/* Table Styles */
+.table th {
+    background-color: var(--rivaq-primary);
+    color: white;
+    border: none;
+}
+
+.table td {
+    color: var(--rivaq-secondary);
+    border-color: #e9ecef;
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(183, 139, 30, 0.1);
+}
+
+/* Form Styles */
+.form-control {
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: var(--rivaq-primary);
+    box-shadow: 0 0 0 0.2rem rgba(183, 139, 30, 0.25);
+}
+
+.form-label {
+    color: var(--rivaq-secondary);
+    font-weight: 500;
+}
+
+/* Badge Styles */
+.badge {
+    font-size: 0.8em;
+    padding: 0.5em 0.8em;
+}
+
+/* Alert Styles */
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+
+/* Modal Styles */
+.modal-content {
+    border-radius: 15px;
+    border: none;
+}
+
+.modal-header {
+    background-color: var(--rivaq-light);
+    border-bottom: 2px solid var(--rivaq-primary);
+    border-radius: 15px 15px 0 0;
+}
+
+/* Progress Bar Styles */
+.progress {
+    height: 8px;
+    border-radius: 10px;
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    background-color: var(--rivaq-primary);
+    border-radius: 10px;
+}
+
+/* Text Colors */
+.text-primary {
+    color: var(--rivaq-primary) !important;
+}
+
+.text-secondary {
+    color: var(--rivaq-secondary) !important;
+}
+
+/* Border Colors */
+.border-primary {
+    border-color: var(--rivaq-primary) !important;
+}
+
+/* Custom Utilities */
+.rivaq-bg-primary {
+    background-color: var(--rivaq-primary) !important;
+}
+
+.rivaq-bg-light {
+    background-color: var(--rivaq-light) !important;
+}
+
+.rivaq-text-primary {
+    color: var(--rivaq-primary) !important;
+}
+
+.rivaq-text-secondary {
+    color: var(--rivaq-secondary) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .sidebar {
+        min-height: auto;
+        border-left: none;
+        border-top: 2px solid var(--rivaq-primary);
+    }
+    
+    .navbar-brand {
+        font-size: 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+}
+
+/* Animation Classes */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+}
+
+/* Loading Spinner */
+.spinner-rivaq {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid var(--rivaq-primary);
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
