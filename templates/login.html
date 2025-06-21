@@ -1,62 +1,51 @@
-{% extends "base.html" %}
 
-{% block title %}تسجيل الدخول - نظام إدارة المهام - شركة رِواق{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        form {
+            max-width: 400px;
+            margin: auto;
+        }
+        label, input {
+            display: block;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h2>Login</h2>
+    <form method="POST" action="/login">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" required />
 
-{% block login_content %}
-<div class="min-vh-100 d-flex align-items-center justify-content-center" style="background-color: #FFFAFA;">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-4">
-                <div class="card shadow-lg border-0" style="border-radius: 15px;">
-                    <div class="card-body p-5">
-                        <!-- Logo -->
-                        <div class="text-center mb-4">
-                            <img src="{{ url_for('static', filename='images/rivaq-logo.png') }}" alt="شعار رِواق" style="height: 80px;" class="mb-3">
-                            <h4 style="color: #b78b1e; font-weight: bold;">شركة رِواق للاستشارات الهندسية</h4>
-                            <p style="color: #121617;">نظام إدارة المهام</p>
-                        </div>
-                        
-                        <!-- Login Form -->
-                        <form method="POST">
-                            <div class="mb-3">
-                                <label for="email" class="form-label" style="color: #121617;">البريد الإلكتروني</label>
-                                <input type="email" class="form-control" id="email" name="email" required 
-                                       style="border-radius: 10px; border: 2px solid #e9ecef;">
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label for="password" class="form-label" style="color: #121617;">كلمة المرور</label>
-                                <input type="password" class="form-control" id="password" name="password" required 
-                                       style="border-radius: 10px; border: 2px solid #e9ecef;">
-                            </div>
-                            
-                            <button type="submit" class="btn btn-primary w-100" style="border-radius: 10px; padding: 12px; font-weight: bold;">
-                                تسجيل الدخول
-                            </button>
-                            
-                            <div class="text-center mt-3">
-                                <a href="{{ url_for('forgot_password') }}" 
-                                   class="text-decoration-none" 
-                                   style="color: #b78b1e; font-weight: 500;">
-                                    نسيت كلمة المرور؟
-                                </a>
-                            </div>
-                        </form>
-                        
-                        <!-- Demo Accounts -->
-                        <div class="mt-4">
-                            <small class="text-muted">حسابات تجريبية:</small>
-                            <div class="mt-2">
-                                <small class="d-block"><strong>majed@rwaqeng.com</strong> / Maj@100200300</small>
-                                <small class="d-block"><strong>asala.alsaaf@rwaqeng.com</strong> / 100200300@Aasala</small>
-                                <small class="d-block"><strong>muhanad.bk@rwaqeng.com</strong> / Muh@100200300</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{% endblock %}
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
 
+        <button type="submit">Sign in</button>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+    </form>
+</body>
+</html>
